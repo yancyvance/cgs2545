@@ -24,9 +24,9 @@ INSERT INTO Course (CourseCode, Title) VALUES
 	('CNT3004', 'Computer Networks');
 
 
--- This inserts 10 records to the Registration table
+-- This inserts 12 records to the Registration table
 INSERT INTO Registration (Semester, Grade, OwnerID, CourseCode) VALUES
-	('Fa24', 'A', 10001, 'COP3223'),
+	('Su25', 'A', 10001, 'COP3223'),
 	('Fa24', 'B+', 10002, 'COP3223'),
 	('Fa24', 'A-', 10003, 'COP3223'),
 	('Sp25', 'A', 10001, 'COP3330'),
@@ -35,4 +35,6 @@ INSERT INTO Registration (Semester, Grade, OwnerID, CourseCode) VALUES
 	('Fa24', 'B+', 10002, 'COP3502'),
 	('Su25', 'A-', 10003, 'CDA3103'),
 	('Su25', 'B', 10004, 'CNT3004'),
-	('Su25', 'A', 10001, 'CNT3004');
+	('Fa24', 'F', 10001, 'COP3223'),
+    ('Sp25', 'D', 10001, 'COP3223'),
+    ('Su24', 'C-', 10003, 'COP3223');
