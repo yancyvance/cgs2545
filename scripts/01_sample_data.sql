@@ -36,5 +36,5 @@ INSERT INTO Registration (Semester, Grade, OwnerID, CourseCode) VALUES
 	('Su25', 'A-', 10003, 'CDA3103'),
 	('Su25', 'B', 10004, 'CNT3004'),
 	('Fa24', 'F', 10001, 'COP3223'),
-    ('Sp25', 'D', 10001, 'COP3223'),
-    ('Su24', 'C-', 10003, 'COP3223');
+	('Sp25', 'D', 10001, 'COP3223'),
+	('Su24', 'C-', 10003, 'COP3223');
