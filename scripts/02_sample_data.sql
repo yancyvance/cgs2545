@@ -7,12 +7,12 @@
 */
 
 -- This inserts 5 records to the Student table
-INSERT INTO Student (StudentID, FirstName, LastName) VALUES
-	(10001, 'Alice', 'Johnson'),
-	(10002, 'Brian', 'Lopez'),
-	(10003, 'Catherine', 'Nguyen'),
-	(10004, 'David', 'Smith'),
-	(10005, 'Ella', 'Martinez');
+INSERT INTO Student (StudentID, FirstName, LastName, DateOfBirth) VALUES
+    (10001, 'Alice', 'Johnson', '2004-03-15'),
+    (10002, 'Brian', 'Lopez',   '2003-07-22'),
+    (10003, 'Catherine', 'Nguyen', '2005-01-10'),
+    (10004, 'David', 'Smith',   '2002-11-30'),
+    (10005, 'Ella', 'Martinez', '2004-09-05');
 
 
 -- This inserts 5 records to the Course table
