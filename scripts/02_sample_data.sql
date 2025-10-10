@@ -4,6 +4,10 @@
     execute this script, you have to ensure that there
     will be no duplicates in the existing table OR that
     your tables are currently empty.
+    
+    Additionally, make sure to modify the tables of your
+    database to reflect the changes we made after the
+    initial creation of the tables.
 */
 
 -- This inserts 5 records to the Student table
