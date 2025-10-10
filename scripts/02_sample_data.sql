@@ -16,12 +16,12 @@ INSERT INTO Student (StudentID, FirstName, LastName) VALUES
 
 
 -- This inserts 5 records to the Course table
-INSERT INTO Course (CourseCode, Title) VALUES
-	('COP3223', 'Introduction to Programming in C'),
-	('COP3330', 'Object-Oriented Programming in Java'),
-	('COP3502', 'Computer Science I'),
-	('CDA3103', 'Computer Logic and Organization'),
-	('CNT3004', 'Computer Networks');
+INSERT INTO Course (CourseCode, Title, CreditHour) VALUES
+	('COP3223', 'Introduction to Programming in C', 3),
+	('COP3330', 'Object-Oriented Programming in Java', 3),
+	('COP3502', 'Computer Science I', 3),
+	('CDA3103', 'Computer Logic and Organization', 5),
+	('CNT3004', 'Computer Networks', 5);
 
 
 -- This inserts 12 records to the Registration table
