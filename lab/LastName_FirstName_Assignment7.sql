@@ -5,6 +5,8 @@
 -- NOTE: Put all your answers in between the START and END markers
 -- Any answers outside of these will be ignored.
 
+-- Use the correct database
+USE university_library;
 
 -- Q1 START
 
