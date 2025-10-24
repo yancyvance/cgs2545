@@ -202,4 +202,61 @@ SELECT *, IF(ShipDate IS NULL, OrderDate, ShipDate) AS LastActivityDate FROM Onl
 
 SELECT *, IFNULL(ShipDate, OrderDate) AS LastActivityDate FROM OnlineOrder;
 
-SELECT *, COALESCE(ShipDate, OrderDate, InitiationDate) AS LastActivityDate FROM OnlineOrder;
+SELECT *, COALESCE(ShipDate, OrderDate) AS LastActivityDate FROM OnlineOrder;
+
+
+
+-- Categorize the orders based on payment method: Internal (Credit/Debit Cards) or External (Gift Card/Paypal)
+SELECT *,
+    CASE PaymentMethod
+        WHEN 'Credit Card' THEN 'Internal'
+        WHEN 'Debit Card' THEN 'Internal'
+        ELSE 'External'
+    END AS PaymentProcessType
+FROM OnlineOrder;
+
+
+
+-- Categorize products based on its price: Low, Mid, High
+CREATE VIEW ProductPrices AS
+SELECT *,
+    CASE
+        WHEN UnitPrice < 10 THEN 'Low'
+        WHEN UnitPrice BETWEEN 10 AND 20 THEN 'Mid'
+        ELSE 'High'
+    END AS PriceGroup,
+    Category NOT IN ('Produce', 'Dairy') AS Taxable,
+    UnitPrice* (1 + .06 * (Category NOT IN ('Produce', 'Dairy')) ) AS PriceAfterTax
+FROM Product;
+
+
+-- Incorporate the information about being Taxable or not AND the price after tax
+SELECT *,
+    CASE
+        WHEN UnitPrice < 10 THEN 'Low'
+        WHEN UnitPrice BETWEEN 10 AND 20 THEN 'Mid'
+        ELSE 'High'
+    END AS PriceGroup,
+    Category NOT IN ('Produce', 'Dairy') AS Taxable,
+    UnitPrice* (1 + .06 * (Category NOT IN ('Produce', 'Dairy')) ) AS PriceAfterTax
+FROM Product;
+
+
+-- create a view from the query above
+CREATE VIEW ProductPrices AS
+SELECT *,
+    CASE
+        WHEN UnitPrice < 10 THEN 'Low'
+        WHEN UnitPrice BETWEEN 10 AND 20 THEN 'Mid'
+        ELSE 'High'
+    END AS PriceGroup,
+    Category NOT IN ('Produce', 'Dairy') AS Taxable,
+    UnitPrice* (1 + .06 * (Category NOT IN ('Produce', 'Dairy')) ) AS PriceAfterTax
+FROM Product;
+
+
+
+-- list all products that are not taxable and belong to the high price group (using views)
+SELECT * FROM ProductPrices
+    WHERE PriceGroup = 'High'
+        AND NOT Taxable;
