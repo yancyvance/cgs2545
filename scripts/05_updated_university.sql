@@ -69,3 +69,37 @@ INSERT INTO Registration (Semester, Grade, OwnerID, CourseCode) VALUES
     ('Fa24', 'F', 10001, 'COP3223'),
     ('Sp25', 'D', 10001, 'COP3223'),
     ('Su24', 'C-', 10003, 'COP3223');
+    
+    
+-- Add another table that will serve as a lookup table
+CREATE TABLE GradingScale (
+    LetterGrade     VARCHAR(2),
+    Points          DOUBLE,
+CONSTRAINT pk_gradingscale PRIMARY KEY (LetterGrade)
+);
+
+-- populate this lookup table
+INSERT INTO GradingScale (LetterGrade, Points) VALUES
+    ('A', 4),
+    ('A-', 3.75),
+    ('B+', 3.25),
+    ('B', 3),
+    ('B-', 2.75),
+    ('C+', 2.25),
+    ('C', 2),
+    ('C-', 1.75),
+    ('D+', 1.25),
+    ('D', 1),
+    ('D-', 0.75),
+    ('F', 0);
+    
+
+    
+-- add new registration for demonstration of outer join
+INSERT INTO Registration (RegNo, Semester, OwnerID, CourseCode) VALUES
+    (13, 'Fa25', 10003, 'COP3502');
+
+
+-- add new student for demonstration of outer join
+INSERT INTO Student (StudentID, FirstName, LastName, DateOfBirth) VALUES
+    (10006, 'Fred', 'Jones', '2005-11-03');
