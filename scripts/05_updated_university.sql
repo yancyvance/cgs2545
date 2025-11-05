@@ -103,3 +103,23 @@ INSERT INTO Registration (RegNo, Semester, OwnerID, CourseCode) VALUES
 -- add new student for demonstration of outer join
 INSERT INTO Student (StudentID, FirstName, LastName, DateOfBirth) VALUES
     (10006, 'Fred', 'Jones', '2005-11-03');
+    
+    
+
+-- create an employee table    
+CREATE TABLE Employee (
+    EmployeeID      INT,
+    FirstName       VARCHAR(100) NOT NULL,
+    LastName        VARCHAR(100) NOT NULL,
+    SupervisorID    INT,
+CONSTRAINT pk_employee PRIMARY KEY (EmployeeID),
+CONSTRAINT fk_employee_employee FOREIGN KEY (SupervisorID)
+    REFERENCES Employee(EmployeeID)
+);
+
+
+-- add new employees for demonstration of self join
+INSERT INTO Employee (EmployeeID, FirstName, LastName, DateHired, SupervisorID) VALUES
+    (1, 'Derek', 'Thompson', '2020-01-01', NULL),
+    (2, 'Elena', 'Morales', '2025-01-01', 1),
+    (3, 'Franklin', 'Chen', '2023-01-01', 2);
