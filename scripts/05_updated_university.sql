@@ -111,6 +111,7 @@ CREATE TABLE Employee (
     EmployeeID      INT,
     FirstName       VARCHAR(100) NOT NULL,
     LastName        VARCHAR(100) NOT NULL,
+    DateHired       DATE NOT NULL,
     SupervisorID    INT,
 CONSTRAINT pk_employee PRIMARY KEY (EmployeeID),
 CONSTRAINT fk_employee_employee FOREIGN KEY (SupervisorID)
