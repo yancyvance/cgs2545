@@ -871,7 +871,7 @@ INSERT INTO OrderDetail (OrderID, ProductID, Qty) VALUES
 (3150, 2039, 1);
 
 
--- updated during the lecture to include the OrderTable column in the OnlineOrder table
+-- updated during the lecture to include the OrderTotal column in the OnlineOrder table
 ALTER TABLE OnlineOrder
     ADD COLUMN OrderTotal DOUBLE AFTER CustomerID;
     
