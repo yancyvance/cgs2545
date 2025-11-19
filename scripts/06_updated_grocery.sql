@@ -886,3 +886,62 @@ UPDATE OnlineOrder ord
     ) res
         ON ord.OrderID = res.OrderID
     SET ord.OrderTotal = res.GrandTotal;
+    
+    
+-- add a stored procedure
+DROP PROCEDURE IF EXISTS CALCULATE_ORDER_TOTAL;
+DELIMITER $$
+CREATE PROCEDURE CALCULATE_ORDER_TOTAL(IN order_id INTEGER)
+BEGIN
+    UPDATE OnlineOrder o
+    SET o.OrderTotal = (
+        SELECT SUM(p.UnitPrice*d.Qty)
+        FROM OrderDetail d
+        INNER JOIN Product p
+            ON d.ProductID = p.ProductID
+        WHERE OrderID = order_id
+    )
+    WHERE o.OrderID = order_id;
+END$$
+DELIMITER ;
+
+
+-- add the three triggers on the OrderDetail table
+DROP TRIGGER IF EXISTS orderdetail_after_insert;
+DELIMITER $$
+CREATE TRIGGER orderdetail_after_insert
+    AFTER INSERT ON OrderDetail
+    FOR EACH ROW
+BEGIN
+    CALL CalculateOrderTotal(NEW.OrderID);
+END$$
+DELIMITER ;
+
+
+DROP TRIGGER IF EXISTS orderdetail_after_delete;
+DELIMITER $$
+CREATE TRIGGER orderdetail_after_delete
+    AFTER DELETE ON OrderDetail
+    FOR EACH ROW
+BEGIN
+    CALL CalculateOrderTotal(OLD.OrderID);
+END$$
+DELIMITER ;
+
+
+DROP TRIGGER IF EXISTS orderdetail_after_update;
+DELIMITER $$
+CREATE TRIGGER orderdetail_after_update
+    AFTER UPDATE ON OrderDetail
+    FOR EACH ROW
+BEGIN
+    -- Recalculate the old one
+    CALL CalculateOrderTotal(OLD.OrderID);
+    
+    -- Recalculate the new one if necessary
+    IF NEW.OrderID <> OLD.OrderID THEN
+        CALL CalculateOrderTotal(NEW.OrderID);
+    END IF;
+END$$
+DELIMITER ;
+
