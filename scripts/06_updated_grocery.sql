@@ -913,7 +913,7 @@ CREATE TRIGGER orderdetail_after_insert
     AFTER INSERT ON OrderDetail
     FOR EACH ROW
 BEGIN
-    CALL CalculateOrderTotal(NEW.OrderID);
+    CALL CALCULATE_ORDER_TOTAL(NEW.OrderID);
 END$$
 DELIMITER ;
 
@@ -924,7 +924,7 @@ CREATE TRIGGER orderdetail_after_delete
     AFTER DELETE ON OrderDetail
     FOR EACH ROW
 BEGIN
-    CALL CalculateOrderTotal(OLD.OrderID);
+    CALL CALCULATE_ORDER_TOTAL(OLD.OrderID);
 END$$
 DELIMITER ;
 
@@ -936,11 +936,11 @@ CREATE TRIGGER orderdetail_after_update
     FOR EACH ROW
 BEGIN
     -- Recalculate the old one
-    CALL CalculateOrderTotal(OLD.OrderID);
+    CALL CALCULATE_ORDER_TOTAL(OLD.OrderID);
     
     -- Recalculate the new one if necessary
     IF NEW.OrderID <> OLD.OrderID THEN
-        CALL CalculateOrderTotal(NEW.OrderID);
+        CALL CALCULATE_ORDER_TOTAL(NEW.OrderID);
     END IF;
 END$$
 DELIMITER ;
