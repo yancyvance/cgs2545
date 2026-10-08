@@ -48,3 +48,137 @@ CREATE TABLE Registration (
         FOREIGN KEY (OwnerID)
             REFERENCES Student(StudentID)
 );
+
+
+SELECT * FROM Course;
+
+INSERT INTO Course (CourseCode, CourseTitle, CreditHours)
+VALUES
+    ('CGS2545', 'Database Concepts', 3);
+
+SELECT * FROM Course;
+
+INSERT INTO Course (CourseCode, CourseTitle, CreditHours)
+VALUES
+    ('COP3223', 'Introduction to Programming in C', 3),
+    ('COP3502', 'Computer Science I', 3),
+    ('MAC2311', 'Calculus I', 4);
+    
+SELECT * FROM Course;
+
+SELECT * FROM Student;
+
+INSERT INTO Student (StudentID, FirstName, LastName, DateOfBirth, Email, Major)
+VALUES
+    (1234567, 'John', 'Doe', '2000-10-06', 'john@ucf.edu', NULL),
+    (2345678, 'Maria', 'Cruz', '2005-11-06', 'maria@ucf.edu', 'Information Technology');
+    
+SELECT * FROM Student;
+
+SELECT * FROM Registration;
+
+INSERT INTO Registration (CourseCode, OwnerID, Semester, SemesterYear, Grade)
+VALUES
+    ('CGS2545', 1234567, 'Fall', 2026, NULL),
+    ('COP3223', 1234567, 'Summer', 2026, 'B+'),
+    ('COP3502', 2345678, 'Spring', 2025, 'A');
+    
+SELECT * FROM Registration;
+
+INSERT INTO Registration (CourseCode, OwnerID, Semester, SemesterYear, Grade)
+VALUES
+    ('COP3503', 2345678, 'Fall', 2026, NULL);
+
+INSERT INTO Registration (CourseCode, OwnerID, Semester, SemesterYear, Grade)
+VALUES
+    ('CGS2545', 1234567, 'Fall', 2026, 'A+');
+
+-- create the department table
+CREATE TABLE Department (
+    DeptID          INT,
+    DeptName        VARCHAR(100) NOT NULL,
+    
+    CONSTRAINT pk_department
+        PRIMARY KEY (DeptID)
+);
+
+SELECT * FROM Department;
+
+INSERT INTO Department (DeptID, DeptName)
+VALUES
+    (1, 'Computer Science'),
+    (2, 'Mathematics');
+
+SELECT * FROM Department;
+
+ALTER TABLE Course
+ADD COLUMN DeptID INT NOT NULL DEFAULT 0,
+ADD CONSTRAINT fk_course_department
+    FOREIGN KEY (DeptID) REFERENCES Department(DeptID);
+    
+SELECT * FROM Course;
+
+INSERT INTO Department (DeptID, DeptName)
+VALUES
+    (0, 'Unassigned');
+    
+SELECT * FROM Department;
+
+ALTER TABLE Course
+ADD COLUMN DeptID INT NOT NULL DEFAULT 0,
+ADD CONSTRAINT fk_course_department
+    FOREIGN KEY (DeptID) REFERENCES Department(DeptID);
+    
+SELECT * FROM Course;
+
+
+UPDATE Course
+SET DeptID = 1
+WHERE CourseCode = 'CGS2545';
+
+SELECT * FROM Course;
+
+UPDATE Course
+SET DeptID = 1
+WHERE CourseCode = 'COP3223' OR CourseCode = 'COP3502';
+
+SELECT * FROM Course;
+
+UPDATE Course
+SET DeptID = 2
+WHERE CourseCode = 'MAC2311';
+
+SELECT * FROM Course;
+
+SELECT * FROM Registration;
+
+/* 
+Comments go here. 
+*/
+UPDATE Registration
+SET Grade = 'F'
+WHERE CourseCode = 'CGS2545'
+    AND OwnerID = 1234567
+    AND Semester = 'Fall'
+    AND SemesterYear = 2026;
+    
+SELECT * FROM Registration;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
