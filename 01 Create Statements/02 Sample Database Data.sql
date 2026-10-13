@@ -114,6 +114,7 @@ VALUES
 
 INSERT INTO Course (CourseCode, CourseTitle, CreditHours, DeptID)
 VALUES
+    ('CGS2545', 'Database Concepts', 3, 1),
     ('COP3330', 'Object Oriented Programming', 3, 1),
     ('COP3503', 'Computer Science II', 3, 1),
     ('CDA3103', 'Computer Logic and Organization', 3, 1),
