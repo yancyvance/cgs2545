@@ -9,6 +9,10 @@ VALUES
     (3, 'Physics'),
     (4, 'English'),
     (5, 'History');
+    
+UPDATE Course
+SET DeptID = 2
+WHERE CourseCode = 'MAC2311';
 
 INSERT INTO Student
     (StudentID, FirstName, LastName, DateOfBirth, Email, Major, IsActive)
