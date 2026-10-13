@@ -149,7 +149,16 @@ VALUES
     ('STA4163', 'Statistical Methods II', 3, 2),
     ('COP4020', 'Programming Languages I', 3, 1),
     ('COP4600', 'Operating Systems', 3, 1),
-    ('COP4710', 'Database Systems', 3, 1);
+    ('COP4710', 'Database Systems', 3, 1),
+    ('CGS1001', 'Introduction to Computing Lab', 1, 1),
+    ('CGS2001', 'Computer Applications Workshop', 2, 1),
+    ('COP1001', 'Programming Fundamentals Lab', 1, 1),
+    ('COP2001', 'Problem Solving Workshop', 2, 1),
+    ('CIS1001', 'Cybersecurity Awareness Seminar', 1, 1),
+    ('CIS2001', 'Database Applications Lab', 2, 1),
+    ('MAT1001', 'Mathematics Seminar', 1, 2),
+    ('MAT2001', 'Applied Mathematics Workshop', 2, 2);
+    
 
 INSERT INTO Registration (CourseCode, OwnerID, Semester, SemesterYear, Grade)
 VALUES
@@ -550,4 +559,20 @@ VALUES
     ('COP3223', 1234583, 'Spring', 2024, 'D'),
     ('COP3223', 1234583, 'Fall', 2025, 'B'),
     ('MAC2311', 1234584, 'Fall', 2024, 'F'),
-    ('MAC2311', 1234584, 'Spring', 2025, 'B');
+    ('MAC2311', 1234584, 'Spring', 2025, 'B'),
+    ('CGS1001', 1234567, 'Fall', 2026, NULL),
+    ('CGS2001', 2345678, 'Fall', 2026, NULL),
+    ('COP1001', 1234567, 'Fall', 2026, NULL),
+    ('COP2001', 2345678, 'Fall', 2026, NULL),
+    ('CIS1001', 1234567, 'Fall', 2026, NULL),
+    ('CIS2001', 2345678, 'Fall', 2026, NULL),
+    ('MAT1001', 1234567, 'Fall', 2026, NULL),
+    ('MAT2001', 2345678, 'Fall', 2026, NULL),
+    ('CGS1001', 2345678, 'Fall', 2026, NULL),
+    ('CGS2001', 1234567, 'Fall', 2026, NULL),
+    ('COP1001', 2345678, 'Fall', 2026, NULL),
+    ('COP2001', 1234567, 'Fall', 2026, NULL),
+    ('CIS1001', 2345678, 'Fall', 2026, NULL),
+    ('CIS2001', 1234567, 'Fall', 2026, NULL),
+    ('MAT1001', 2345678, 'Fall', 2026, NULL),
+    ('MAT2001', 1234567, 'Fall', 2026, NULL);
