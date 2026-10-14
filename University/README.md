@@ -33,9 +33,7 @@ The expanded dataset supports exercises involving:
 - Sorting results using `ORDER BY`.
 - Working with logical and comparison operators.
 - Handling missing values using `IS NULL` and `IS NOT NULL`.
-- Combining related tables using `JOIN`.
-- Summarizing data using aggregate functions and `GROUP BY`.
-- Writing subqueries and more complex SQL statements.
+
 
 ## Getting Started
 
