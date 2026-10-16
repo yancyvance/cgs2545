@@ -66,6 +66,26 @@ Topics covered include:
 
 **Important:** The script includes an intentionally incorrect logical condition involving `AND` and `OR`. Although the query executes successfully, it does not produce the intended results because of operator precedence. A corrected version is provided immediately afterward to demonstrate the importance of grouping conditions using parentheses.
 
+
+### 4. `04 Intermediate Select Statements.sql`
+
+**Status: Work in Progress**
+
+This script builds upon the basic `SELECT` statements by introducing pattern matching and additional logical conditions using the `Course` table.
+
+Topics currently covered include:
+
+- **Pattern matching:** Using `LIKE` with the `%` wildcard to match zero or more characters.
+- **Single-character matching:** Using the `_` wildcard to match exactly one character.
+- **Excluding patterns:** Using `NOT LIKE` to retrieve records that do not match a specified pattern.
+- **Combining conditions:** Using `AND` and `OR` with multiple `NOT LIKE` conditions.
+- **Logical errors:** Demonstrating how an incorrect logical operator can produce unintended results even when the SQL statement executes successfully.
+
+**Important:** The script includes an intentionally incorrect query that uses `OR` instead of `AND` when excluding course titles containing either of two specified words. A corrected query is provided to demonstrate the difference.
+
+Additional examples will be added as the lesson progresses.
+
+
 ## Getting Started
 
 1. Open MySQL Workbench and connect to your MySQL server.
