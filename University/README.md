@@ -94,7 +94,7 @@ Additional examples will be added as the lesson progresses.
 4. Once the demonstration is complete, open `02 Sample Database Data.sql`.
 5. Execute the sample data script to populate the database with additional records.
 6. Open `03 Basic Select Statements.sql`.
-7. Continue with `04 Intermediate SELECT Statements.sql` to explore pattern matching and logical conditions.
+7. Continue with `04 Intermediate Select Statements.sql` to explore pattern matching and logical conditions.
 8. Execute the queries individually, observe the results, and review how each query demonstrates a particular SQL concept.
 
 **Note:** Execute the scripts in the order indicated by their filenames. The second and third scripts assume that the university database and its tables have already been created.
