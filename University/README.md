@@ -87,6 +87,14 @@ Topics covered include:
 | `Registration` | Stores course registrations, semesters, academic years, and grades. |
 | `Department` | Stores academic departments associated with courses. |
 
+### Entity-Relationship Diagram
+
+The following diagram illustrates the structure of the university database, including its tables, primary keys, foreign keys, and relationships.
+
+![University Database ER Diagram](images/university-erd.png)
+
+**Note:** The diagram represents the final database structure after the schema modifications demonstrated in `01 Create University Database.sql`.
+
 ## Requirements
 
 - MySQL 8.0 or later
