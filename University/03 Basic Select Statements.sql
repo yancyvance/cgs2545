@@ -1,5 +1,7 @@
+
 /* Select the university database for the following SQL queries. */
 USE university;
+
 
 /* Task 1: List all students.
    Demonstrate SELECT * to retrieve all columns. */
@@ -29,7 +31,22 @@ WHERE Major = 'Information Technology'
 
 /* Task 5: List all inactive students whose major is
    Information Technology or Computer Science.
-   Demonstrate combining AND and OR using parentheses. */
+   Demonstrate operator precedence and the importance
+   of parentheses when combining AND and OR. */
+
+/* [INTENTIONAL LOGIC ERROR]
+   AND has higher precedence than OR, so the condition
+   IsActive = FALSE applies only to Computer Science majors.
+   Consequently, active Information Technology students
+   may also appear in the results. */
+SELECT * FROM Student
+WHERE Major = 'Information Technology'
+    OR Major = 'Computer Science'
+    AND IsActive = FALSE;
+
+/* [CORRECTED QUERY]
+   Group the major conditions using parentheses so that
+   IsActive = FALSE applies to both majors. */
 SELECT * FROM Student
 WHERE ( Major = 'Information Technology'
     OR Major = 'Computer Science' )
