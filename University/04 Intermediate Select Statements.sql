@@ -65,15 +65,36 @@ WHERE CourseTitle NOT LIKE '%Computer%'
     AND CourseTitle NOT LIKE '%Programming%';
 
 
+
+/* Introduction to Scalar Functions
+
+   A scalar function accepts one or more arguments and
+   returns a single value for each invocation.
+
+   When a scalar function uses a column in a SELECT query,
+   it operates on the value from each row, producing
+   a corresponding result for that row.
+
+   Examples include SUBSTRING(), CONCAT(), and CAST().
+
+   Scalar functions can be used to transform or calculate
+   values without modifying the underlying data. */
+
+
 /* Task 7: List all courses and add a calculated column
    named CoursePrefix containing the first three characters
    of the course code.
-   Introduce SUBSTRING() for extracting part of a string.
+
+   Introduce SUBSTRING() as a scalar function.
+   Demonstrate how the function operates on CourseCode
+   for each row to produce the corresponding CoursePrefix.
+
    Character positions begin at 1. */
 SELECT
     *,
     SUBSTRING(CourseCode, 1, 3) AS CoursePrefix
 FROM Course;
+
 
 
 /* Task 8: List all courses and add two calculated columns:
