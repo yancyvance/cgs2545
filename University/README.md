@@ -71,9 +71,18 @@ Topics covered include:
 
 **Status: Work in Progress**
 
-This script continues the SQL querying activities introduced in `03 Basic Select Statements.sql`, building upon previously discussed concepts such as filtering, logical operators, sorting, and handling `NULL` values. The activities progressively introduce additional SQL features, including pattern matching, built-in functions, calculated columns, type conversion, duplicate elimination, and date comparisons.
+This script continues the SQL querying activities introduced in
+`03 Basic Select Statements.sql`, building upon previously discussed
+concepts such as filtering, logical operators, sorting, and handling
+`NULL` values. The activities progressively introduce additional SQL
+features, including pattern matching, scalar functions, calculated
+columns, type conversion, duplicate elimination, and date comparisons.
 
-The examples use the `Course` and `Student` tables to demonstrate how SQL can retrieve, transform, and evaluate data without modifying the underlying records.
+The examples use the `Course` and `Student` tables to demonstrate how
+SQL can retrieve, transform, and evaluate data without modifying the
+underlying records. Particular emphasis is placed on scalar functions,
+which operate on individual values and can generate a corresponding
+result for each row in a query.
 
 Topics currently covered include:
 
