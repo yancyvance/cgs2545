@@ -82,6 +82,7 @@ Topics currently covered include:
 - **Excluding patterns:** Using `NOT LIKE` to retrieve records that do not match specified patterns.
 - **Combining conditions:** Using `AND` and `OR` with multiple `NOT LIKE` conditions.
 - **Logical errors:** Demonstrating how an incorrect logical operator can produce unintended results even when the SQL statement executes successfully.
+- **Scalar functions:** Introducing built-in functions that operate on individual values.
 - **String manipulation:** Using `SUBSTRING()` to extract portions of course codes and `CONCAT()` to combine string values.
 - **Calculated columns:** Using expressions and aliases to generate additional columns in query results without modifying the underlying tables.
 - **Type conversion:** Using `CAST()` to explicitly convert extracted string values into numeric values.
@@ -97,6 +98,7 @@ Topics currently covered include:
 - `LIKE` and `NOT LIKE` support pattern matching using `%` for zero or more characters and `_` for exactly one character.
 - Logical operators must be combined carefully to produce the intended results. A syntactically valid query may still contain logical errors.
 - `SUBSTRING()` extracts characters from a string, while `CONCAT()` combines multiple string values into a single result.
+- Scalar functions return a single value for each invocation. When applied to column values in a `SELECT` query, they produce a corresponding result for each row without modifying the stored data.
 - SQL functions can transform and calculate values directly within queries without modifying the underlying database.
 - Calculated columns can be created using expressions and assigned meaningful aliases using `AS`.
 - `CAST()` explicitly converts values between compatible data types. Values that appear similar in query results may have different data types.
