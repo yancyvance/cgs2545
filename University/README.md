@@ -71,19 +71,49 @@ Topics covered include:
 
 **Status: Work in Progress**
 
-This script builds upon the basic `SELECT` statements by introducing pattern matching and additional logical conditions using the `Course` table.
+This script continues the SQL querying activities introduced in `03 Basic Select Statements.sql`, building upon previously discussed concepts such as filtering, logical operators, sorting, and handling `NULL` values. The activities progressively introduce additional SQL features, including pattern matching, built-in functions, calculated columns, type conversion, duplicate elimination, and date comparisons.
+
+The examples use the `Course` and `Student` tables to demonstrate how SQL can retrieve, transform, and evaluate data without modifying the underlying records.
 
 Topics currently covered include:
 
 - **Pattern matching:** Using `LIKE` with the `%` wildcard to match zero or more characters.
 - **Single-character matching:** Using the `_` wildcard to match exactly one character.
-- **Excluding patterns:** Using `NOT LIKE` to retrieve records that do not match a specified pattern.
+- **Excluding patterns:** Using `NOT LIKE` to retrieve records that do not match specified patterns.
 - **Combining conditions:** Using `AND` and `OR` with multiple `NOT LIKE` conditions.
 - **Logical errors:** Demonstrating how an incorrect logical operator can produce unintended results even when the SQL statement executes successfully.
+- **String manipulation:** Using `SUBSTRING()` to extract portions of course codes and `CONCAT()` to combine string values.
+- **Calculated columns:** Using expressions and aliases to generate additional columns in query results without modifying the underlying tables.
+- **Type conversion:** Using `CAST()` to explicitly convert extracted string values into numeric values.
+- **Sorting calculated values:** Using `ORDER BY` with calculated column aliases and multiple sorting criteria.
+- **Using aliases:** Demonstrating why aliases defined in `SELECT` can be referenced in `ORDER BY` but not in `WHERE` at the same query level.
+- **Eliminating duplicates:** Using `DISTINCT` to retrieve unique values and understanding how it applies to the selected columns.
+- **Comparing values with NULL:** Examining how ordinary comparisons involving `NULL` evaluate to `UNKNOWN` and affect query results.
+- **Handling NULL values:** Using `IFNULL()` and `COALESCE()` to provide alternative values when expressions evaluate to `NULL`.
+- **Date comparisons:** Using comparison operators to filter records based on `DATE` values, including inclusive and exclusive date boundaries.
 
-**Important:** The script includes an intentionally incorrect query that uses `OR` instead of `AND` when excluding course titles containing either of two specified words. A corrected query is provided to demonstrate the difference.
+#### Key Takeaways
 
-Additional examples will be added as the lesson progresses.
+- `LIKE` and `NOT LIKE` support pattern matching using `%` for zero or more characters and `_` for exactly one character.
+- Logical operators must be combined carefully to produce the intended results. A syntactically valid query may still contain logical errors.
+- `SUBSTRING()` extracts characters from a string, while `CONCAT()` combines multiple string values into a single result.
+- SQL functions can transform and calculate values directly within queries without modifying the underlying database.
+- Calculated columns can be created using expressions and assigned meaningful aliases using `AS`.
+- `CAST()` explicitly converts values between compatible data types. Values that appear similar in query results may have different data types.
+- Calculated column aliases can be referenced in `ORDER BY` but not in `WHERE` at the same query level.
+- `DISTINCT` eliminates duplicate rows based on the complete set of selected columns. It does not necessarily change the results when each selected row is already unique.
+- Comparisons involving `NULL` generally evaluate to `UNKNOWN`. The `WHERE` clause includes only rows whose conditions evaluate to `TRUE`.
+- `IFNULL()` and `COALESCE()` provide alternative values for `NULL` expressions without modifying stored data.
+- Date values can be compared using operators such as `<`, `<=`, and `=`. Inclusive and exclusive date boundaries can sometimes express equivalent filtering conditions.
+
+**Important:** The script includes intentionally incorrect queries to demonstrate common SQL mistakes:
+
+- An incorrect query uses `OR` instead of `AND` when excluding course titles containing either of two specified words. Although the query executes successfully, it produces unintended results because of the logical operator used.
+- Another query attempts to reference a calculated column alias in the `WHERE` clause. This produces an error because the alias defined in `SELECT` is not available to `WHERE` at the same query level.
+
+Corrected versions are provided immediately afterward to demonstrate the underlying concepts and encourage comparison and discussion.
+
+Additional examples and topics will be added as the lesson progresses.
 
 
 ## Getting Started
