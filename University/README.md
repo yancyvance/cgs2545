@@ -78,7 +78,7 @@ concepts such as filtering, logical operators, sorting, and handling
 features, including pattern matching, scalar functions, calculated
 columns, type conversion, duplicate elimination, and date comparisons.
 
-The examples use the `Course` and `Student` tables to demonstrate how
+The examples use the `Course`, `Student`, and `Registration` tables to demonstrate how
 SQL can retrieve, transform, and evaluate data without modifying the
 underlying records. Particular emphasis is placed on scalar functions,
 which operate on individual values and can generate a corresponding
@@ -101,6 +101,14 @@ Topics currently covered include:
 - **Comparing values with NULL:** Examining how ordinary comparisons involving `NULL` evaluate to `UNKNOWN` and affect query results.
 - **Handling NULL values:** Using `IFNULL()` and `COALESCE()` to provide alternative values when expressions evaluate to `NULL`.
 - **Date comparisons:** Using comparison operators to filter records based on `DATE` values, including inclusive and exclusive date boundaries.
+- **String lengths:** Using `CHAR_LENGTH()` to count the characters in student last names.
+- **Date ranges and components:** Using `BETWEEN`, `YEAR()`, and `MONTH()` to filter dates and extract year or month values.
+- **Current dates and age calculations:** Using `CURDATE()` and `TIMESTAMPDIFF()` to calculate age, including the effect of whether a birthday has passed.
+- **Sorting and limiting results:** Using `LIMIT` with `ORDER BY` and examining the effect of missing tie-breaking criteria.
+- **Date-related conditions:** Finding birthdays in a given month and identifying leap years using arithmetic and logical conditions.
+- **Conditional expressions:** Using simple and searched `CASE` expressions, including optional `ELSE` clauses, to assign grade points and remarks.
+- **Aggregate functions:** Using `COUNT(*)` and `COUNT(column)` to count registrations and distinguish all rows from non-`NULL` values.
+- **Grouping results:** Using `GROUP BY` to summarize registrations by academic year.
 
 #### Key Takeaways
 
@@ -116,11 +124,21 @@ Topics currently covered include:
 - Comparisons involving `NULL` generally evaluate to `UNKNOWN`. The `WHERE` clause includes only rows whose conditions evaluate to `TRUE`.
 - `IFNULL()` and `COALESCE()` provide alternative values for `NULL` expressions without modifying stored data.
 - Date values can be compared using operators such as `<`, `<=`, and `=`. Inclusive and exclusive date boundaries can sometimes express equivalent filtering conditions.
+- `CHAR_LENGTH()` returns the number of characters in a string, while `YEAR()` and `MONTH()` extract components of date values.
+- `BETWEEN` includes both endpoints of a range. For a `DATE` column, direct date comparisons do not require wrapping the column in `DATE()`.
+- `CURDATE()` returns the current date based on the MySQL session time zone. `TIMESTAMPDIFF(YEAR, ...)` counts complete elapsed years and accounts for whether a birthday has passed.
+- `ORDER BY` controls the ordering of rows, but `LIMIT 1` may return any tied row when no additional tie-breaking criterion is provided.
+- Simple `CASE` compares an expression with specified values; searched `CASE` evaluates conditions in order. Both forms support an optional `ELSE`, and return `NULL` if no condition matches and `ELSE` is omitted.
+- `COUNT(*)` counts all rows, whereas `COUNT(column)` excludes rows in which that column is `NULL`.
+- `GROUP BY` produces a separate aggregate result for each group, while `WHERE` filters individual rows before grouping.
 
 **Important:** The script includes intentionally incorrect queries to demonstrate common SQL mistakes:
 
 - An incorrect query uses `OR` instead of `AND` when excluding course titles containing either of two specified words. Although the query executes successfully, it produces unintended results because of the logical operator used.
 - Another query attempts to reference a calculated column alias in the `WHERE` clause. This produces an error because the alias defined in `SELECT` is not available to `WHERE` at the same query level.
+
+- Another query attempts to use a calculated birth-year alias in `WHERE`, which is not permitted at the same query level.
+- An age estimate based only on subtracting birth years can be inaccurate when the birthday has not yet occurred.
 
 Corrected versions are provided immediately afterward to demonstrate the underlying concepts and encourage comparison and discussion.
 
@@ -135,10 +153,10 @@ Additional examples and topics will be added as the lesson progresses.
 4. Once the demonstration is complete, open `02 Sample Database Data.sql`.
 5. Execute the sample data script to populate the database with additional records.
 6. Open `03 Basic Select Statements.sql`.
-7. Continue with `04 Intermediate Select Statements.sql` to explore pattern matching and logical conditions.
+7. Continue with `04 Intermediate Select Statements.sql` to explore pattern matching, scalar and date functions, conditional expressions, and introductory aggregation.
 8. Execute the queries individually, observe the results, and review how each query demonstrates a particular SQL concept.
 
-**Note:** Execute the scripts in the order indicated by their filenames. The second and third scripts assume that the university database and its tables have already been created.
+**Note:** Execute the scripts in the order indicated by their filenames. The data and query scripts assume that the university database and its tables have already been created.
 
 ## Database Overview
 
