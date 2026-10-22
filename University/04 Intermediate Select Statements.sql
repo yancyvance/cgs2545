@@ -284,25 +284,285 @@ SELECT
 FROM Student;
 
 
-/* Task 22: List all students born on or before
+/* Task 22: List all students and add a calculated column
+   named LastNameLength containing the number of characters
+   in each student's last name.
+
+   Introduce CHAR_LENGTH() for counting characters in a string.
+   Note: CHAR_LENGTH(NULL) returns NULL. */
+SELECT
+    *,
+    CHAR_LENGTH(LastName) AS LastNameLength
+FROM Student;
+
+
+/* Task 23: List all students born on or before
    October 11, 2005.
 
    Demonstrate comparing DATE values using <=.
    DateOfBirth is a DATE column without a time component.
 
-   Use the YYYY-MM-DD format for date literals. */
+   Use the YYYY-MM-DD format for date literals.
+   DATE() is unnecessary because DateOfBirth is already
+   a DATE column. */
 SELECT * FROM Student
 WHERE DateOfBirth <= '2005-10-11';
 
+/* [ALTERNATIVE QUERY]
+   DATE() extracts the date portion of a date or datetime
+   value. It is valid here but unnecessary for a DATE column. */
+SELECT * FROM Student
+WHERE DATE(DateOfBirth) <= '2005-10-11';
 
-/* Task 23: List all students born on or before
+
+/* Task 24: List all students born on or before
    October 11, 2005, using an alternative condition.
 
    Demonstrate that comparing dates before October 12, 2005
-   produces the same result as Task 22.
+   produces the same result as Task 23.
 
    The < operator excludes the specified boundary date.
    This approach is also useful for DATETIME columns when
    filtering records through the end of a calendar day. */
 SELECT * FROM Student
 WHERE DateOfBirth < '2005-10-12';
+
+
+/* Task 25: List all students born between January 1, 2000,
+   and October 1, 2000, inclusive.
+
+   Demonstrate BETWEEN for an inclusive range and compare
+   it with equivalent >= and <= conditions. */
+SELECT * FROM Student
+WHERE DateOfBirth BETWEEN '2000-01-01' AND '2000-10-01';
+
+/* [ALTERNATIVE QUERY]
+   BETWEEN includes both endpoints of the range.
+   DATE() is unnecessary because DateOfBirth is already
+   a DATE column. The following comparisons are equivalent. */
+SELECT * FROM Student
+WHERE DateOfBirth >= '2000-01-01'
+    AND DateOfBirth <= '2000-10-01';
+
+/* [ALTERNATIVE QUERY USING DATE()]
+   Applying DATE() also works, but adds an unnecessary
+   function call when the column is already a DATE. */
+SELECT * FROM Student
+WHERE DATE(DateOfBirth) >= '2000-01-01'
+    AND DATE(DateOfBirth) <= '2000-10-01';
+
+
+/* Task 26: List all students with a calculated BirthYear.
+   Sort by birth year in descending order, then by
+   student ID in ascending order.
+
+   Introduce YEAR() to extract the year from a DATE.
+   ORDER BY can reference the BirthYear alias. */
+SELECT
+    *,
+    YEAR(DateOfBirth) AS BirthYear
+FROM Student
+ORDER BY BirthYear DESC, StudentID ASC;
+
+
+/* Task 27: List only students born in the year 2000.
+   Revisit the limitation of SELECT aliases in WHERE. */
+
+/* [INTENTIONAL ERROR]
+   BirthYear is defined in SELECT and cannot be referenced
+   in WHERE at the same query level. */
+SELECT
+    *,
+    YEAR(DateOfBirth) AS BirthYear
+FROM Student
+WHERE BirthYear = 2000;
+
+/* [CORRECTED QUERY]
+   Use the YEAR() expression directly in WHERE. */
+SELECT *
+FROM Student
+WHERE YEAR(DateOfBirth) = 2000;
+
+
+/* Task 28: List students born in 2000 and arrange them
+   by date of birth in ascending order, then student ID.
+
+   Demonstrate using a scalar function in WHERE and ORDER BY.
+   Note: Sorting by YEAR(DateOfBirth) is redundant here
+   because all returned students have the same birth year. */
+SELECT *
+FROM Student
+WHERE YEAR(DateOfBirth) = 2000
+ORDER BY YEAR(DateOfBirth) DESC, DateOfBirth ASC, StudentID ASC;
+
+
+/* Task 29: Find the youngest student in the database.
+   Demonstrate ORDER BY with LIMIT to return one row.
+
+   A later birth date indicates a younger student.
+   Note: If multiple students share the latest birth date,
+   LIMIT 1 returns only one of them. Since no tie-breaking
+   criterion is specified, which student is returned is
+   not guaranteed and may vary between executions. */
+SELECT * FROM Student
+ORDER BY DateOfBirth DESC
+LIMIT 1;
+
+
+/* Task 30: List all students and estimate their age
+   by subtracting their birth year from 2026.
+
+   Demonstrate arithmetic using YEAR(). */
+
+/* [INTENTIONAL LOGIC ERROR]
+   Subtracting birth years does not account for whether
+   the student's birthday has occurred during the year.
+   It also hardcodes 2026 rather than using today's date. */
+SELECT
+    *,
+    2026 - YEAR(DateOfBirth) AS EstimatedAge
+FROM Student;
+
+/* [CORRECTED QUERY]
+   Compare the year-subtraction approach with TIMESTAMPDIFF().
+
+   CURDATE() is a function that returns the current date
+   based on the server's session time zone.
+
+   TIMESTAMPDIFF() returns the difference between two date/time
+   values in the specified unit. YEAR is one possible unit;
+   others include MONTH, DAY, HOUR, MINUTE, and SECOND.
+
+   TIMESTAMPDIFF(YEAR, ...) counts complete elapsed years,
+   accounting for whether the birthday has passed. */
+SELECT
+    *,
+    YEAR(CURDATE()) - YEAR(DateOfBirth) AS EstimatedAge,
+    TIMESTAMPDIFF(YEAR, DateOfBirth, CURDATE()) AS CurrentAge
+FROM Student;
+
+
+/* Task 31: List all students whose birthday falls in October.
+   Introduce MONTH() to extract the month from a DATE.
+
+   Note: The birth year does not affect the birthday month. */
+SELECT
+    *,
+    MONTH(DateOfBirth) AS BirthMonth
+FROM Student
+WHERE MONTH(DateOfBirth) = 10;
+
+
+/* Task 32: List all students born during a leap year.
+   Demonstrate combining arithmetic, comparison, AND,
+   and OR conditions.
+
+   A year is a leap year if it is divisible by 400,
+   or divisible by 4 but not by 100. */
+SELECT * FROM Student
+WHERE (YEAR(DateOfBirth) % 400 = 0)
+    OR (YEAR(DateOfBirth) % 4 = 0 AND YEAR(DateOfBirth) % 100 != 0);
+
+
+/* Task 33: List all registrations.
+   Review the Registration table before analyzing grades. */
+SELECT * FROM Registration;
+
+
+/* Task 34: List only the unique student IDs of students
+   who have made at least one registration. Each student
+   ID must appear exactly once, even if that student has
+   multiple registrations.
+
+   Demonstrate DISTINCT on a foreign-key column.
+   Sort the unique student IDs in ascending order. */
+SELECT DISTINCT OwnerID
+FROM Registration
+ORDER BY OwnerID;
+
+
+/* Task 35: List all distinct grades recorded in Registration.
+   Demonstrate that DISTINCT includes one NULL result
+   when some registrations have not yet been graded. */
+SELECT DISTINCT Grade FROM Registration;
+
+
+/* Task 36: List all registrations and add calculated columns
+   named GradePoint and GradeRemark.
+
+   Introduce the two forms of CASE expressions:
+   1. Simple CASE compares an expression against specific values.
+   2. Searched CASE evaluates conditions in order and returns
+      the result for the first condition that is TRUE.
+
+   Both forms can include an optional ELSE clause to specify
+   a result when no WHEN clause matches. Without ELSE,
+   the expression returns NULL if no condition matches.
+
+   Note: ELSE -1 in the first CASE is a demonstration placeholder
+   for grades that do not match any listed value, including NULL.
+   It is not a valid grade point or GPA value. */
+SELECT
+    *,
+    CASE Grade
+        WHEN 'A' THEN 4.00
+        WHEN 'A-' THEN 3.75
+        WHEN 'B+' THEN 3.25
+        WHEN 'B' THEN 3.00
+        WHEN 'B-' THEN 2.75
+        WHEN 'C+' THEN 2.25
+        WHEN 'C' THEN 2.00
+        WHEN 'C-' THEN 1.75
+        WHEN 'D' THEN 1.00
+        WHEN 'F' THEN 0.00
+        ELSE -1     -- Demonstration placeholder for unmatched or NULL grades.
+    END AS GradePoint,
+    CASE
+        WHEN Grade IS NULL THEN 'Not Graded'
+        WHEN Grade IN ('A', 'A-', 'B+', 'B', 'B-') THEN 'Satisfactory'
+        WHEN Grade IN ('C+', 'C') THEN 'Needs Improvement'
+        WHEN Grade IN ('C-', 'D', 'F') THEN 'Failed'
+    END AS GradeRemark
+FROM Registration;
+
+
+/* Introduction to Aggregate Functions
+
+   An aggregate function summarizes values across rows
+   and returns one result for each group, or one result
+   for the entire table when no GROUP BY is specified.
+
+   Examples include COUNT(), MIN(), MAX(), SUM(), and AVG().
+
+   COUNT(*) counts rows, while COUNT(column) excludes rows
+   where the specified column is NULL. */
+
+
+/* Task 37: Count all registrations in the database.
+   Introduce COUNT(*) to count rows. */
+SELECT * FROM Registration;
+
+SELECT COUNT(*) AS RegCount
+FROM Registration;
+
+
+/* Task 38: Count registrations made during Fall 2026.
+   Demonstrate using WHERE to filter rows before
+   calculating an aggregate result. */
+SELECT COUNT(*) AS RegCount
+FROM Registration
+WHERE SemesterYear = 2026
+    AND Semester = 'Fall';
+
+
+/* Task 39: Count registrations for each semester year.
+   Introduce GROUP BY to calculate a separate COUNT(*)
+   for each distinct SemesterYear value.
+
+   Without GROUP BY, COUNT(*) would return a single total.
+   ORDER BY can be added to sort the years if desired. */
+SELECT
+    SemesterYear,
+    COUNT(*) AS RegCount
+FROM Registration
+GROUP BY SemesterYear;
