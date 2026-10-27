@@ -566,3 +566,292 @@ SELECT
     COUNT(*) AS RegCount
 FROM Registration
 GROUP BY SemesterYear;
+
+
+/* Task 40: Count registrations for each semester year and
+   arrange the results by year in descending order.
+
+   Extend Task 39 by adding ORDER BY after GROUP BY.
+   Sorting does not change how the groups are formed. */
+SELECT
+    SemesterYear,
+    COUNT(*) AS RegCount
+FROM Registration
+GROUP BY SemesterYear
+ORDER BY SemesterYear DESC;
+
+
+/* Task 41: Count registrations for each semester year.
+   Sort by the registration count in descending order,
+   breaking ties by semester year in ascending order.
+
+   Demonstrate ORDER BY using an aggregate column alias
+   and a second expression to establish a tie-breaker. */
+SELECT
+    SemesterYear,
+    COUNT(*) AS RegCount
+FROM Registration
+GROUP BY SemesterYear
+ORDER BY RegCount DESC, SemesterYear ASC;
+
+
+/* Task 42: List semester years ordered by the number of
+   registrations in each year, without displaying the count.
+
+   Demonstrate that ORDER BY can use an aggregate expression
+   even when that expression is not included in SELECT.
+   The COUNT(*) output column is intentionally commented out. */
+SELECT
+    SemesterYear
+--    COUNT(*) AS RegCount
+FROM Registration
+GROUP BY SemesterYear
+ORDER BY COUNT(*) DESC, SemesterYear ASC;
+
+
+/* Task 43: Count registrations for each semester within
+   each academic year.
+
+   Introduce GROUP BY with multiple columns. Each distinct
+   combination of SemesterYear and Semester forms a group.
+   ORDER BY SemesterYear sorts the years, but does not
+   guarantee the order of semesters within the same year. */
+SELECT
+    SemesterYear,
+    Semester,
+    COUNT(*) AS RegCount
+FROM Registration
+GROUP BY SemesterYear, Semester
+ORDER BY SemesterYear;
+
+
+/* Task 44: Display semester/year groups with more than
+   40 registrations.
+
+   [INTENTIONAL ERROR]
+   COUNT(*) is an aggregate function and cannot be used
+   in WHERE to filter groups. WHERE filters individual
+   rows before GROUP BY forms the groups. */
+SELECT
+    SemesterYear,
+    Semester,
+    COUNT(*) AS RegCount
+FROM Registration
+WHERE COUNT(*) > 40
+GROUP BY SemesterYear, Semester
+ORDER BY SemesterYear;
+
+
+/* [CORRECTED QUERY]
+   HAVING filters groups after grouping. MySQL permits
+   the SELECT alias RegCount to be referenced in HAVING.
+   A portable alternative is HAVING COUNT(*) > 40. */
+SELECT
+    SemesterYear,
+    Semester,
+    COUNT(*) AS RegCount
+FROM Registration
+GROUP BY SemesterYear, Semester
+HAVING RegCount > 40
+ORDER BY SemesterYear;
+
+
+/* Task 45: List all registrations made by student 1234567.
+   Review filtering individual rows with WHERE before
+   calculating registration statistics for one student. */
+SELECT * FROM Registration
+WHERE OwnerID = 1234567;
+
+
+/* Task 46: Determine the total number of registrations
+   made by student 1234567.
+
+   Combine WHERE and COUNT(*). Since GROUP BY is omitted,
+   the query returns one aggregate result for the
+   qualifying registrations. */
+SELECT 
+    COUNT(*) AS RegCount 
+FROM Registration
+WHERE OwnerID = 1234567;
+
+
+/* Task 47: Count how many registrations for student
+   1234567 already have a recorded grade.
+
+   WHERE Grade IS NOT NULL excludes ungraded registrations.
+   Compare this approach with COUNT(Grade), which ignores
+   NULL values in its argument. */
+SELECT COUNT(*) FROM Registration
+WHERE OwnerID = 1234567
+    AND Grade IS NOT NULL;
+
+
+/* Task 48: Summarize student 1234567's registrations.
+   Display the total count, graded count, and completion rate.
+
+   COUNT(*) includes every registration; COUNT(Grade)
+   excludes NULL grades. Dividing the latter by the former
+   gives the proportion graded, between 0 and 1.
+   ROUND(..., 2) rounds the displayed proportion.
+   This example assumes the student has registrations. */
+SELECT 
+    COUNT(*) AS RegCount,
+    COUNT(Grade) AS GradedCount,
+    ROUND( COUNT(Grade) / COUNT(*), 2 ) AS CompletionRate
+FROM Registration
+WHERE OwnerID = 1234567;
+
+
+/* Task 49: Add a calculated MissingRate column for
+   student 1234567.
+
+   MissingRate is the proportion of registrations with
+   no recorded grade. Since every registration is either
+   graded or ungraded, MissingRate = 1 - CompletionRate
+   before rounding. Both rates range from 0 to 1. */
+SELECT 
+    COUNT(*) AS RegCount,
+    COUNT(Grade) AS GradedCount,
+    ROUND( COUNT(Grade) / COUNT(*), 2 ) AS CompletionRate,
+    ROUND( 1 - COUNT(Grade) / COUNT(*), 2 ) AS MissingRate
+FROM Registration
+WHERE OwnerID = 1234567;
+
+
+/* Task 50: Calculate registration and grade-completion
+   statistics for every student appearing in Registration.
+
+   GROUP BY OwnerID creates one result per registered
+   student. Students with no registrations do not appear
+   because this query uses only the Registration table. */
+SELECT 
+    OwnerID,
+    COUNT(*) AS RegCount,
+    COUNT(Grade) AS GradedCount,
+    ROUND( COUNT(Grade) / COUNT(*), 2 ) AS CompletionRate,
+    ROUND( 1 - COUNT(Grade) / COUNT(*), 2 ) AS MissingRate
+FROM Registration
+GROUP BY OwnerID
+ORDER BY OwnerID;
+
+
+/* Task 51: Show only registered students whose grades
+   have all been recorded.
+
+   HAVING RegCount = GradedCount retains groups where
+   every registration has a non-NULL Grade. MySQL allows
+   SELECT aliases in HAVING. */
+SELECT 
+    OwnerID,
+    COUNT(*) AS RegCount,
+    COUNT(Grade) AS GradedCount,
+    ROUND( COUNT(Grade) / COUNT(*), 2 ) AS CompletionRate,
+    ROUND( 1 - COUNT(Grade) / COUNT(*), 2 ) AS MissingRate
+FROM Registration
+GROUP BY OwnerID
+HAVING RegCount = GradedCount
+ORDER BY OwnerID;
+
+
+/* Task 52: List all courses.
+   Return to the Course table before examining aggregate
+   credit-hour statistics by department. */
+SELECT * FROM Course;
+
+
+/* Task 53: For each department ID, calculate the minimum,
+   maximum, total, and average credit hours of its courses.
+
+   Introduce MIN(), MAX(), SUM(), and AVG() together.
+   GROUP BY DeptID returns one summary for each distinct
+   department ID, including a NULL group if any courses
+   have no assigned department. */
+
+SELECT
+    DeptID,
+    MIN(CreditHours) AS MinHours,
+    MAX(CreditHours) AS MaxHours,
+    SUM(CreditHours) AS TotalHours,
+    AVG(CreditHours) AS AverageHours
+FROM Course
+GROUP BY DeptID;
+
+
+/* Task 54: Show department groups whose average course
+   credit hours are at least 3.
+
+   HAVING AVG(CreditHours) >= 3 filters the grouped results.
+   Unlike WHERE, HAVING can test aggregate expressions. */
+SELECT
+    DeptID,
+    MIN(CreditHours) AS MinHours,
+    MAX(CreditHours) AS MaxHours,
+    SUM(CreditHours) AS TotalHours,
+    AVG(CreditHours) AS AverageHours
+FROM Course
+GROUP BY DeptID
+HAVING AVG(CreditHours) >= 3;
+
+
+/* Task 55: Extend Task 54 to include only departments
+   offering at least five courses.
+
+   Combine two aggregate conditions using AND in HAVING.
+   Both the average-credit requirement and the minimum
+   course-count requirement must be satisfied. */
+SELECT
+    DeptID,
+    MIN(CreditHours) AS MinHours,
+    MAX(CreditHours) AS MaxHours,
+    SUM(CreditHours) AS TotalHours,
+    AVG(CreditHours) AS AverageHours
+FROM Course
+GROUP BY DeptID
+HAVING AVG(CreditHours) >= 3
+    AND COUNT(*) >= 5;
+
+
+/* Task 56: [CHALLENGE] Count letter grades awarded in
+   each academic year, grouped by their leading letter.
+
+   Begin with a query that counts all registrations per year.
+   Then use conditional aggregation to count A, B, C, D,
+   and F grades separately, including plus/minus variants.
+   The intended presentation is by ascending SemesterYear;
+   ORDER BY is not yet included in the provided queries. */
+SELECT 
+    SemesterYear,
+    COUNT(*) AS RegCount
+FROM Registration
+GROUP BY SemesterYear;
+
+/* [CONDITIONAL AGGREGATION EXAMPLE]
+   In MySQL, a TRUE comparison evaluates numerically to 1
+   and FALSE to 0, allowing SUM() to count matches.
+   LIKE 'A%' also includes grades such as A-.
+   For NULL grades, LIKE returns NULL; SUM() ignores NULL.
+   If every grade in a year is NULL, the sum is NULL rather
+   than zero. SUM(CASE WHEN ... THEN 1 ELSE 0 END) avoids
+   this issue and is more portable across SQL systems. */
+SELECT
+    SemesterYear,
+    SUM( Grade LIKE 'A%' ) AS AGradeCount,
+    SUM( Grade LIKE 'B%' ) AS BGradeCount,
+    SUM( Grade LIKE 'C%' ) AS CGradeCount,
+    SUM( Grade LIKE 'D%' ) AS DGradeCount,
+    SUM( Grade LIKE 'F%' ) AS FGradeCount
+FROM Registration
+GROUP BY SemesterYear;
+
+
+/* Task 57: List all students and add a calculated
+   CurrentStatus column containing Active or Inactive.
+
+   Introduce MySQL's IF(condition, true_value, false_value)
+   scalar function. The expression returns Active when
+   IsActive = 1 and Inactive otherwise.
+   The underlying IsActive column is not modified. */
+SELECT
+    *,
+    IF( IsActive = 1, 'Active', 'Inactive' ) AS CurrentStatus
+FROM Student;
