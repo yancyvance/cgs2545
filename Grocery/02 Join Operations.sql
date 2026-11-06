@@ -321,3 +321,253 @@ INNER JOIN Product p
 GROUP BY d.OrderID
 HAVING GrandTotal >= 100
 ORDER BY d.OrderID;
+
+
+/*
+Task 19: Retrieve Unique Products Purchased by a Customer
+
+List the IDs and names of all distinct products purchased
+by customer 4.
+
+Use multiple INNER JOIN operations and sort by ProductID.
+*/
+SELECT DISTINCT
+    p.ProductID,
+    p.ProductName
+FROM OrderDetail d
+INNER JOIN Product p
+    ON d.ProductID = p.ProductID
+INNER JOIN OnlineOrder o
+    ON d.OrderID = o.OrderID
+WHERE o.CustomerID = 4
+ORDER BY p.ProductID;
+
+
+/*
+Task 20: Retrieve Products Purchased by Customers in Florida
+
+List the IDs and names of all distinct products purchased
+by customers living in Florida (FL).
+
+Join the four related tables and sort by ProductID.
+*/
+SELECT DISTINCT
+    p.ProductID,
+    p.ProductName
+FROM OrderDetail d
+INNER JOIN Product p
+    ON d.ProductID = p.ProductID
+INNER JOIN OnlineOrder o
+    ON d.OrderID = o.OrderID
+INNER JOIN Customer c
+    ON c.CustomerID = o.CustomerID
+WHERE c.State = 'FL'
+ORDER BY p.ProductID;
+
+
+/*
+Task 21: Count Unique Products Purchased by Each Customer
+
+Determine the number of distinct products purchased
+by each customer.
+
+Display CustomerID and UniqueProductCount.
+*/
+SELECT
+    o.CustomerID,
+    COUNT(DISTINCT d.ProductID) AS UniqueProductCount
+FROM OrderDetail d
+INNER JOIN OnlineOrder o
+    ON d.OrderID = o.OrderID
+GROUP BY o.CustomerID;
+
+
+/*
+Task 22: Calculate Customer Spending
+
+Calculate the total amount spent by each customer using
+the current product prices.
+
+Display only customers whose total spending is at least $1000.
+
+Note that customers without orders are excluded.
+*/
+SELECT
+    o.CustomerID,
+    SUM(p.UnitPrice * d.Qty) AS TotalSpent
+FROM OrderDetail d
+INNER JOIN OnlineOrder o
+    ON d.OrderID = o.OrderID
+INNER JOIN Product p
+    ON d.ProductID = p.ProductID
+GROUP BY o.CustomerID
+HAVING TotalSpent >= 1000;
+
+
+/*
+Task 23: Sort Customers by Their Total Spending
+
+List customers whose total spending is at least $1000.
+
+Display CustomerID and TotalSpent.
+Sort by CustomerID in ascending order.
+*/
+SELECT
+    o.CustomerID,
+    SUM(p.UnitPrice * d.Qty) AS TotalSpent
+FROM OrderDetail d
+INNER JOIN OnlineOrder o
+    ON d.OrderID = o.OrderID
+INNER JOIN Product p
+    ON d.ProductID = p.ProductID
+GROUP BY o.CustomerID
+HAVING TotalSpent >= 1000
+ORDER BY o.CustomerID ASC;
+
+
+/*
+Task 24: Examine the Current Order Pricing Design
+
+List order details alongside their product information.
+
+Consider what happens to historical order totals
+when the current product price changes.
+*/
+SELECT *
+FROM OrderDetail d
+INNER JOIN Product p
+    ON d.ProductID = p.ProductID;
+
+
+/*
+Reminder: Add PurchaseUnitPrice to OrderDetail
+
+If you missed the earlier schema modification, execute
+the ALTER TABLE statement below before proceeding.
+
+PurchaseUnitPrice stores the unit price of a product
+at the time of purchase, rather than its current price.
+
+IMPORTANT: Skip this statement if PurchaseUnitPrice
+already exists in your OrderDetail table.
+*/
+ALTER TABLE OrderDetail
+ADD COLUMN PurchaseUnitPrice DECIMAL(10,2);
+
+
+/*
+Task 25: Populate Purchase-Time Unit Prices
+
+Populate OrderDetail.PurchaseUnitPrice using the
+corresponding product's current unit price.
+
+Use UPDATE with INNER JOIN.
+
+For this sample dataset, current prices are used
+to initialize the purchase-time prices.
+*/
+UPDATE OrderDetail d
+INNER JOIN Product p
+    ON d.ProductID = p.ProductID
+SET d.PurchaseUnitPrice = p.UnitPrice;
+
+
+/*
+Task 26: Verify the Updated Order Details
+
+Display all order details to confirm that
+PurchaseUnitPrice has been populated.
+*/
+SELECT * FROM OrderDetail;
+
+
+/*
+Task 27: Examine All Employees
+
+List all employees and determine the total number
+of employees in the database.
+
+Keep this count in mind for the next task.
+*/
+SELECT * FROM Employee;
+
+SELECT COUNT(*) AS EmployeeCount
+FROM Employee;
+
+
+/*
+Task 28: Introduce Employee Self-Joins
+
+List employees along with their managers' first
+and last names.
+
+Use INNER JOIN on the Employee table.
+
+Compare the number of returned rows with Task 27.
+Why are some employees missing?
+*/
+SELECT
+    e.*,
+    m.FirstName AS ManagerFirstName,
+    m.LastName AS ManagerLastName
+FROM Employee e
+INNER JOIN Employee m
+    ON e.ManagerID = m.EmployeeID;
+
+
+/*
+Task 29: Include Employees Without Managers
+
+List all employees and their manager information,
+including employees without an assigned manager.
+
+Use LEFT JOIN and compare the results with Task 27.
+*/
+SELECT *
+FROM Employee e
+LEFT JOIN Employee m
+    ON e.ManagerID = m.EmployeeID;
+
+
+/*
+Task 30: Count Direct Reports per Manager
+
+List the IDs of employees who supervise other employees,
+along with the number of their direct reports.
+
+Name the count column EmployeeCount.
+*/
+SELECT
+    m.EmployeeID AS ManagerID,
+    COUNT(*) AS EmployeeCount
+FROM Employee m
+INNER JOIN Employee e
+    ON m.EmployeeID = e.ManagerID
+GROUP BY m.EmployeeID;
+
+
+/*
+Task 31: Identify Employees Without Assigned Managers
+
+List employees whose ManagerID is NULL.
+
+Is a JOIN necessary for this query?
+*/
+SELECT *
+FROM Employee
+WHERE ManagerID IS NULL;
+
+
+/*
+Task 32: Identify Employees Without Matching Managers
+
+Use LEFT JOIN to identify employees who do not
+have a matching manager record.
+
+Compare the results with Task 31.
+*/
+SELECT *
+FROM Employee e
+LEFT JOIN Employee m
+    ON e.ManagerID = m.EmployeeID
+WHERE m.EmployeeID IS NULL;
