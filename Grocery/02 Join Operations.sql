@@ -527,6 +527,8 @@ SELECT *
 FROM Employee e
 LEFT JOIN Employee m
     ON e.ManagerID = m.EmployeeID;
+    
+
 
 
 /*
@@ -571,3 +573,241 @@ FROM Employee e
 LEFT JOIN Employee m
     ON e.ManagerID = m.EmployeeID
 WHERE m.EmployeeID IS NULL;
+
+
+/*
+Task 33: List the distinct IDs of departments with employees.
+How many departments are returned?
+*/
+-- 10 rows returned
+SELECT DISTINCT DeptID FROM Employee;
+
+
+/*
+Task 34: List the distinct IDs and names of departments
+that have employees.
+Note: DeptName does not affect DISTINCT here because
+each DeptID corresponds to only one DeptName.
+*/
+SELECT DISTINCT e.DeptID, d.DeptName
+FROM Employee e
+INNER JOIN Department d
+    ON e.DeptID = d.DeptID;
+
+
+/*
+Task 35: Count all departments in the database.
+*/
+-- returns a 12
+SELECT COUNT(*) FROM Department;
+
+
+/*
+Task 36: List all departments and their employees,
+including departments without employees.
+Use LEFT JOIN to include all departments, even those
+without employees. Observe the rows with no matching
+employees, where the employee columns contain NULL values.
+*/
+SELECT
+    *
+FROM Department d
+LEFT JOIN Employee e
+    ON d.DeptID = e.DeptID;
+
+
+/*
+Task 37: Identify departments that have no employees.
+Use LEFT JOIN instead of INNER JOIN to preserve
+departments without matching employees. An INNER JOIN
+would exclude the very departments we want to identify.
+*/
+SELECT
+    d.DeptID,
+    d.DeptName
+FROM Department d
+LEFT JOIN Employee e
+    ON d.DeptID = e.DeptID
+WHERE e.EmployeeID IS NULL;
+
+
+/*
+Task 38: Count employees in each department.
+This query contains a logic error. Observe the employee
+counts for departments without employees. Why are these
+counts incorrect?
+*/
+SELECT
+    d.DeptID,
+    COUNT(*) AS EmployeeCount
+FROM Department d
+LEFT JOIN Employee e
+    ON d.DeptID = e.DeptID
+GROUP BY d.DeptID;
+
+
+/*
+Task 39: Correct the employee counts. Display DeptID,
+DeptName, and EmployeeCount, including zero counts.
+*/
+SELECT
+    d.DeptID,
+    COUNT(e.EmployeeID) AS EmployeeCount
+FROM Department d
+LEFT JOIN Employee e
+    ON d.DeptID = e.DeptID
+GROUP BY d.DeptID;
+
+
+/*
+Task 40: List the IDs and names of employees
+whose annual salary is greater than their manager's.
+Include only employees who have a manager.
+*/
+SELECT
+    e.EmployeeID,
+    CONCAT(e.FirstName, ' ', e.LastName) AS EmployeeName
+FROM Employee e
+INNER JOIN Employee m
+    ON e.ManagerID = m.EmployeeID
+WHERE e.AnnualSalary > m.AnnualSalary;
+
+
+/*
+Task 41: List the IDs and names of employees
+who were hired before their manager.
+Include only employees who have a manager.
+*/
+SELECT
+    e.EmployeeID,
+    CONCAT(e.FirstName, ' ', e.LastName) AS EmployeeName
+FROM Employee e
+INNER JOIN Employee m
+    ON e.ManagerID = m.EmployeeID
+WHERE e.DateHired < m.DateHired;
+
+
+/*
+Task 42: List the IDs and names of customers
+who have placed at least one order.
+Use INNER JOIN because we only want customers with
+matching orders. CustomerID is a required foreign key
+in OnlineOrder, ensuring every order belongs to an
+existing customer. Use DISTINCT because a customer
+may have multiple orders, resulting in duplicate
+customer records. Display each customer only once.
+*/
+SELECT DISTINCT
+    c.CustomerID,
+    c.FirstName,
+    c.LastName
+FROM OnlineOrder o
+INNER JOIN Customer c
+    ON o.CustomerID = c.CustomerID;
+
+
+/*
+Task 43: List all customers who have never
+placed an order. Display CustomerID, FirstName,
+LastName, and Email.
+This demonstrates the anti-join pattern using
+LEFT JOIN and IS NULL to identify unmatched rows.
+An INNER JOIN would exclude these customers.
+*/
+SELECT
+    c.CustomerID,
+    c.FirstName,
+    c.LastName,
+    c.Email
+FROM Customer c
+LEFT JOIN OnlineOrder o
+    ON c.CustomerID = o.CustomerID
+WHERE o.OrderID IS NULL;
+
+
+/*
+Task 44: List all customers and their order details.
+Include customers without orders.
+*/
+SELECT
+    *
+FROM Customer c
+LEFT JOIN OnlineOrder o
+    ON c.CustomerID = o.CustomerID
+LEFT JOIN OrderDetail d
+    ON o.OrderID = d.OrderID
+LEFT JOIN Product p
+    ON d.ProductID = p.ProductID;
+
+
+/*
+Task 45: Calculate each customer's total spending.
+Display all customer information and TotalSpent.
+Include customers without purchases and display 0
+for their total spending.
+*/
+SELECT
+    c.*,
+    COALESCE(SUM(d.Qty * d.PurchaseUnitPrice), 0) AS TotalSpent
+FROM Customer c
+LEFT JOIN OnlineOrder o
+    ON c.CustomerID = o.CustomerID
+LEFT JOIN OrderDetail d
+    ON o.OrderID = d.OrderID
+LEFT JOIN Product p
+    ON d.ProductID = p.ProductID
+GROUP BY c.CustomerID;
+
+
+/*
+Task 46: Create a view named ListOfCustomerSpending
+that displays all customer information and their
+total spending, including customers without purchases.
+*/
+CREATE VIEW ListOfCustomerSpending AS
+SELECT
+    c.*,
+    COALESCE(SUM(d.Qty * d.PurchaseUnitPrice), 0) AS TotalSpent
+FROM Customer c
+LEFT JOIN OnlineOrder o
+    ON c.CustomerID = o.CustomerID
+LEFT JOIN OrderDetail d
+    ON o.OrderID = d.OrderID
+LEFT JOIN Product p
+    ON d.ProductID = p.ProductID
+GROUP BY c.CustomerID;
+
+
+/*
+Task 47: Retrieve all records from the
+ListOfCustomerSpending view.
+*/
+SELECT * FROM ListOfCustomerSpending;
+
+
+/*
+Task 48: Use the ListOfCustomerSpending view
+to list all customers sorted by their total
+spending in descending order.
+*/
+SELECT * FROM ListOfCustomerSpending
+ORDER BY TotalSpent DESC;
+
+
+/*
+Task 49: Use the ListOfCustomerSpending view
+to identify the customer with the highest
+total spending. Assume there is no tie for
+the highest total spending.
+*/
+SELECT *
+FROM ListOfCustomerSpending
+ORDER BY TotalSpent DESC
+LIMIT 1;
+
+
+-- NOTE: A view is dynamic. It does not store a separate
+-- copy of the results. When new records are inserted or
+-- existing records are updated in the underlying tables,
+-- the view reflects these changes when queried again.
+-- There is no need to recreate the view.
