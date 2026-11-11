@@ -652,6 +652,7 @@ DeptName, and EmployeeCount, including zero counts.
 */
 SELECT
     d.DeptID,
+    d.DeptName,
     COUNT(e.EmployeeID) AS EmployeeCount
 FROM Department d
 LEFT JOIN Employee e
