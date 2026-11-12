@@ -3,7 +3,7 @@
 
 This repository contains SQL scripts designed to support hands-on demonstrations and exercises for an introductory database course using **MySQL** and **MySQL Workbench**.
 
-The scripts use a synthetic grocery database to demonstrate relationships between tables, Cartesian products, `CROSS JOIN`, `INNER JOIN`, `NATURAL JOIN`, `LEFT JOIN`, self-joins, multi-table queries, aggregate functions, grouping, filtering aggregated results, and views.
+The scripts use a synthetic grocery database to demonstrate relationships between tables, Cartesian products, `CROSS JOIN`, `INNER JOIN`, `NATURAL JOIN`, `LEFT JOIN`, self-joins, multi-table queries, aggregate functions, grouping, filtering aggregated results, views, and subqueries.
 
 ## Files
 
@@ -13,11 +13,11 @@ This script creates and populates the `grocery` database with synthetic data for
 
 ### 2. `02 Join Operations.sql`
 
-**Work in progress:** This script is still being developed and may be expanded or revised as additional topics are introduced. The current version contains 49 numbered tasks that progressively introduce queries involving multiple tables, beginning with Cartesian products and continuing through joins, aggregate calculations, and views.
+This completed script contains 49 numbered tasks that progressively introduce queries involving multiple tables, beginning with Cartesian products and continuing through joins, aggregate calculations, and views.
 
 The examples use `Category`, `Department`, `Product`, `OrderDetail`, `OnlineOrder`, `Customer`, and `Employee`. Here, `Department` represents employee departments and is used alongside `Category` to illustrate a Cartesian product, not a product-to-department relationship.
 
-Topics currently covered include:
+Topics covered include:
 
 - **Examining tables:** Using `USE`, `SHOW TABLES`, and `SELECT *` to inspect the database.
 - **Cartesian products:** Comparing comma-separated tables with explicit `CROSS JOIN` syntax.
@@ -68,18 +68,80 @@ Topics currently covered include:
 
 Another demonstration intentionally contains a logic error when counting employees using `COUNT(*)` with `LEFT JOIN`. The following task corrects the count using `COUNT(EmployeeID)`. Compare the results to understand why departments without employees may otherwise be counted incorrectly.
 
+### 3. `03 Join Exercises.sql`
+
+This script contains 10 exercises for students to practice writing queries involving multiple related tables. Some exercises include sample solutions, while others are left for students to complete.
+
+The exercises cover:
+
+- **INNER JOIN:** Retrieving employees and their departments, customers who have placed orders, and products that have been purchased.
+- **LEFT JOIN:** Including employees without department assignments, departments without employees, and customers without orders.
+- **Aggregation with joins:** Counting orders per customer and calculating average employee salaries by department.
+- **Finding unmatched records:** Identifying products that have never been purchased.
+- **Self-joins:** Retrieving employees and their managers, including employees without managers.
+- **Conditional joins:** Identifying customers who have not placed an order during a specified year.
+
+The exercises reinforce the distinction between `INNER JOIN` and `LEFT JOIN`, particularly when related records may be missing.
+
+**Note:** Task 10 uses 2025 instead of the 2026 example demonstrated during the lecture so students can compare the results.
+
+### 4. `04 Subqueries.sql`
+
+**Work in progress:** This script is still being developed and may be expanded or revised as additional topics are introduced.
+
+The current version contains 12 numbered tasks divided into two sections: SQL puzzles and an introduction to subqueries.
+
+#### Section 1: SQL Puzzles
+
+The first three tasks reinforce previously introduced concepts, including joins, grouping, aggregate functions, and filtering groups.
+
+Topics include:
+
+- **Duplicate names:** Identifying customers who share the same first and last names using `GROUP BY` and `HAVING`.
+- **Repeated purchases:** Identifying customers with multiple order-detail records for the same product.
+- **Purchases across different orders:** Using `COUNT(DISTINCT OrderID)` to identify customers who purchased the same product in multiple orders.
+
+These exercises emphasize the differences between counting records, counting distinct values, and interpreting grouped query results.
+
+#### Section 2: Subqueries
+
+The remaining tasks introduce subqueries through examples involving employee salaries, customers, and orders.
+
+Topics currently covered include:
+
+- **Scalar subqueries:** Comparing employee salaries with the average salary calculated by another query.
+- **IN:** Identifying customers and employees whose IDs appear in the results of a subquery.
+- **NOT IN:** Identifying records whose IDs do not appear in the results of a subquery.
+- **Duplicate values in subqueries:** Demonstrating why `DISTINCT` is unnecessary for membership testing with `IN` and `NOT IN`.
+- **NULL and three-valued logic:** Investigating how NULL affects comparisons using `NOT IN`.
+- **Nullable foreign keys:** Examining how an optional `EmpID` in `OnlineOrder` affects queries identifying employees who have not processed orders.
+- **Handling NULL in subqueries:** Comparing `COALESCE()` with `IS NOT NULL` as approaches to prevent NULL values from affecting `NOT IN`.
+
+#### Key Takeaways
+
+- A subquery is a query nested within another SQL statement.
+- A scalar subquery returns a single value that can be used in a comparison.
+- Subqueries allow queries to use values calculated from the current database rather than relying on fixed values.
+- `IN` tests whether a value matches any value returned by a subquery.
+- `NOT IN` tests whether a value differs from every value returned by a subquery.
+- Duplicate values in a subquery do not change the results of `IN` or `NOT IN`.
+- A NULL value returned by a subquery can cause `NOT IN` to evaluate to UNKNOWN for otherwise unmatched values.
+- Conditions in a `WHERE` clause retain only rows for which the condition evaluates to TRUE.
+- Filtering NULL values using `IS NOT NULL` can prevent unexpected results when using `NOT IN`.
+- `COALESCE()` can replace NULL with a specified value, but the replacement must be chosen carefully to avoid conflicts with valid data.
+
+**Important:** The examples involving `EmpID` intentionally demonstrate the effect of NULL values on `NOT IN`. Because `EmpID` in `OnlineOrder` is optional, the subquery may return NULL and produce unexpected results. The following task demonstrates two approaches to address this issue.
+
 ## Getting Started
 
 1. Open MySQL Workbench and connect to your MySQL server.
 2. Open and execute `01 Create and Populate Grocery Database.sql` to create and populate the database.
-3. Open `02 Join Operations.sql`.
-4. Execute `USE grocery;` and `SHOW TABLES;` to select and inspect the database.
-5. Run the numbered tasks in sequence, comparing the outputs of `CROSS JOIN`, filtered Cartesian products, `INNER JOIN`, and `LEFT JOIN`.
-6. Examine the intentionally incorrect queries and then execute their corrected versions.
-7. Continue through the product statistics and order-total calculations, observing how `GROUP BY` and `HAVING` change the results.
-8. Explore multi-table joins and self-joins to retrieve information about customer purchases and employee reporting relationships.
-9. Examine how `LEFT JOIN` preserves unmatched rows, and compare `COUNT(*)` with `COUNT(column)` when calculating employee counts.
-10. Create and query the `ListOfCustomerSpending` view, then use `ORDER BY` and `LIMIT` to identify the highest-spending customer.
+3. Open `02 Join Operations.sql` and execute the numbered tasks in sequence.
+4. Examine the intentionally incorrect queries and compare them with their corrected versions.
+5. Explore multi-table joins, aggregate calculations, self-joins, and the handling of unmatched records.
+6. Create and query the `ListOfCustomerSpending` view, then use `ORDER BY` and `LIMIT` to identify the highest-spending customer.
+7. Open `03 Join Exercises.sql` and complete the exercises to practice writing queries involving multiple tables.
+8. Open `04 Subqueries.sql` to explore SQL puzzles, scalar subqueries, `IN`, `NOT IN`, and the effects of NULL values.
 
 **Note:** The demonstration assumes that the `grocery` database and its sample records have already been created. Execute the setup script before running the queries.
 
