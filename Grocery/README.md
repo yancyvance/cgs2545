@@ -232,21 +232,13 @@ The `CREATE VIEW` statement should also be executed only when the view does not 
 ## Database Overview
 
 | Table | Description |
-
 |---|---|
-
 | `Category` | Stores product categories used to classify products. |
-
 | `Department` | Stores organizational departments to which grocery store employees belong. |
-
 | `Product` | Stores product information, including category associations and current unit prices. |
-
 | `OrderDetail` | Stores individual order line items, including purchased products, quantities, and purchase-time unit prices. |
-
 | `OnlineOrder` | Stores order-level information and associates orders with customers. |
-
 | `Customer` | Stores customer information associated with orders. |
-
 | `Employee` | Stores employee information, including department assignments, salaries, hiring dates, and reporting relationships. |
 
 ### Entity-Relationship Diagram
